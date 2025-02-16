@@ -1,6 +1,11 @@
 import streamlit as st
 import base64
 
+# Function to convert image to base64 string
+def image_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
+
 # Sample data for professors
 professors = [
     {
@@ -26,9 +31,67 @@ professors = [
         "research_opportunity": "Looking for talented undergraduate students interested in AI applications in robotics. The role involves working on medical robotics systems and developing algorithms to enhance their accuracy.", 
         "karma": 40,
         "posting": "The Robotics Institude is focused on developing AI-driven robotic systems for spinal surgery. Our goal is to build a robotic-assisted surgical system that can automatically adjust the surgical tools during spinal surgeries with precise movements, minimizing human error and improving patient outcomes. We are using machine learning algorithms combined with real-time imaging to enable robotic systems to visualize the patient's spine in 3D and adjust their movements accordingly during the procedure. This project aims to increase the precision of spinal surgeries, reduce recovery times, and prevent complications such as misalignments."
-
     }
 ]
+
+def display_header():
+    # Use custom CSS to position the profile photo and messages button in the top-right corner
+    st.markdown(
+        """
+        <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .header-left {
+            flex: 1;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .messages-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Header layout
+    st.markdown(
+        """
+        <div class="header">
+            <div class="header-left">
+                <h1 style='text-align: left;'>TarHeel Trade</h1>
+            </div>
+            <div class="header-right">
+                <a href="/messages" target="_self">
+                    <button class="messages-button">💬 Messages</button>
+                </a>
+                <img src="data:image/png;base64,{photo_base64}" class="profile-photo">
+            </div>
+        </div>
+        """.format(photo_base64=image_to_base64("alice.png")),  # Replace "alice.png" with Alice's photo
+        unsafe_allow_html=True,
+    )
 
 if "professor_index" not in st.session_state:
     st.session_state.professor_index = 0  # Track the current professor index
@@ -83,23 +146,38 @@ def professor_view():
                     color: white;
                 }
                 .button-container {
+                    position: absolute;
+                    bottom: 20px;  /* Adjust this value to position it vertically */
+                    left: 50%;
+                    transform: translateX(-50%);  /* Center the buttons horizontally */
                     display: flex;
-                    justify-content: center;
+                    justify-content: space-between;
                     gap: 20px;
+                    width: 300px;  /* Optional: adjust button container width */
+                }
+                .button-container button {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    width: 120px;  /* Added width for consistency */
                 }
                 </style>
                 """,
                 unsafe_allow_html=True,
             )
             
+            photo_base64 = image_to_base64(professor["photo"])
+
             # Profile Header with Photo and Name
             st.markdown(f"""
                 <div class='card'>
                     <div class="profile-header">
                         <h3>{professor["job_title"]}</h3>
                     </div>
-                     <img src="{professor['photo']}" class="profile-photo" alt="{professor['name']}">
-                        <h4>{professor["name"]}</h4>
+                    <img src="data:image/png;base64,{photo_base64}" class="profile-photo" width="100" height="100">
+                    <h4>{professor["name"]}</h4>
                     <p><strong>Project Description Topic:</strong> {professor["posting"]}</p>
                     <p><b>Research Opportunity:</b> {professor["research_opportunity"]}</p>
             """, unsafe_allow_html=True)
@@ -120,9 +198,9 @@ def professor_view():
         st.write("No more professors to show!")
 
 # Main App UI
-st.markdown("<h1 style='text-align: center;'>TarHeel Research Opportunities</h1>", unsafe_allow_html=True)
+def main():
+    display_header()
+    professor_view()
 
-menu = ["View Professors"]
-choice = st.sidebar.selectbox("Navigation", menu)
-
-professor_view()
+if __name__ == "__main__":
+    main()
