@@ -2,12 +2,6 @@ import streamlit as st
 import base64
 
 # Hide the sidebar
-no_sidebar_style = """
-    <style>
-        div[data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-st.markdown(no_sidebar_style, unsafe_allow_html=True)
 
 # Function to convert image to base64 string
 def image_to_base64(image_path):
@@ -16,7 +10,7 @@ def image_to_base64(image_path):
 
 # Sample data for profiles
 students = [
-    {"user_type": "student", "name": "Alice Dogwood", "photo": "alice.png", "tags": ["cs", "statistics", "math"], "about": "Hi, my name is Alice! I am an undergraduate student at UNC-Chapel Hill. I'm passionate about data science, analytics, and visualization, and I have experience working on machine learning and data visualization projects via a summer internship.", "major": "Computer Science", "year": "2026", "resume": "Lesson 9_GRQs_Mitosis, Development, and Cancer.pdf", "karma": 10},
+    {"user_type": "student", "name": "Alice Dogwood", "photo": "alice.png", "tags": ["cs", "statistics", "math"], "about": "Hi, my name is Alice! I am an undergraduate student at UNC-Chapel Hill. I'm passionate about data science, analytics, and visualization, and I have experience working on machine learning and data visualization projects via a summer internship.", "major": "Computer Science", "year": "2026", "resume": "Untitled.pdf", "karma": 10},
     {"user_type": "student", "name": "Bob Carpenter", "photo": "bob.png", "tags": ["cs", "physics"], "about": "I am an undergraduate sophomore student at UNC-Chapel Hill. I'm really interested in quantum computing, and I'm especially interested in developing quantum algorithms that are more computationally efficient.", "major": "Computer Science", "year": "2027", "resume": "Bob.pdf", "karma": 100},
 ]
 
@@ -57,6 +51,22 @@ def display_header():
             font-size: 14px;
             text-decoration: none;
         }
+        .create-post-button {
+            background-color:rgb(185, 100, 177);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 150px;
+            text-align: center;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -70,7 +80,7 @@ def display_header():
                 <h1 style='text-align: left;'>TarHeel Trade</h1>
             </div>
             <div class="header-right">
-                <a href="/?page=messages" target="_self">
+                <a href="/messages" target="_self">
                     <button class="messages-button">💬 Messages</button>
                 </a>
                 <a href="/?page=profile" target="_self">
@@ -83,9 +93,7 @@ def display_header():
     )
 
 # Function to display the messaging screen
-def messaging_screen():
-    st.markdown("<h1 style='text-align: center;'>Messages</h1>", unsafe_allow_html=True)
-    st.write("This is the messaging screen. You can implement your messaging functionality here.")
+
 
 # Function to display the swipe UI
 def swipe_ui():
@@ -139,6 +147,21 @@ def swipe_ui():
                 .swipe-right {
                     background-color: #4CAF50;
                     color: white;
+                }
+                .create-post-button {
+                    background-color:rgb(185, 100, 177);
+                    color: white;
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    text-decoration: none;
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 150px;
+                    text-align: center;
                 }
                 </style>
                 """,
@@ -210,21 +233,30 @@ def swipe_ui():
     else:
         st.markdown("<h3 style='text-align: center;'>No more profiles to show!</h3>", unsafe_allow_html=True)
 
+    st.markdown(
+    """
+    <a href="/post" target="_self">
+        <button class="create-post-button">➕ Create Post</button>
+    </a>
+    """,
+    unsafe_allow_html=True,
+    )
+
 # Main app logic
 def main():
     # Display the header
     display_header()
 
     # Check the URL query parameter to determine the current page
-    query_params = st.query_params
-    page = query_params.get("page", ["home"])[0]  # Default to "home"
-
-    if page == "messages":
-        messaging_screen()
-    elif page == "profile":
-        st.write("This is the profile screen. You can implement your profile functionality here.")
-    else:
-        swipe_ui()
+    #query_params = st.query_params
+    #
+    #if page == "messages":
+        #messaging_screen()
+    #elif page == "profile":
+    #    st.write("This is the profile screen. You can implement your profile functionality here.")
+    #else:
+        
+    swipe_ui()
 
 # Run the app
 if __name__ == "__main__":

@@ -54,8 +54,8 @@ def display_header():
             gap: 10px;
         }
         .profile-photo {
-            width: 40px;
-            height: 40px;
+            width: 40px !important;
+            height: 40px !important;
             border-radius: 50%;
             object-fit: cover;
             cursor: pointer;
@@ -70,6 +70,49 @@ def display_header():
             cursor: pointer;
             font-size: 14px;
             text-decoration: none;
+        }
+
+         .profile-button {
+            background-color:rgb(76, 157, 175);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+         .create-post-button {
+            background-color:rgb(185, 100, 177);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 150px;
+            text-align: center;
+        }
+
+        .no-professors-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;  /* Full viewport height */
+            text-align: center;
+            color: #333;
+        }
+        
+        .no-professors-message {
+            font-size: 24px;
+            font-weight: bold;
+            color:rgb(13, 16, 13);  /* Green for emphasis */
+            padding: 20px;
         }
         </style>
         """,
@@ -87,12 +130,12 @@ def display_header():
                 <a href="/messages" target="_self">
                     <button class="messages-button">💬 Messages</button>
                 </a>
-                <a href="/profile">
-                    <button class="profile-button">My Profile</button>
+                <a href="/?page=profile" target="_self">
+                    <img src="data:image/png;base64,{photo_base64}" class="profile-photo">
                 </a>
             </div>
         </div>
-        """.format(photo_base64=image_to_base64("alice.png")),  # Replace "alice.png" with Alice's photo
+        """.format(photo_base64=image_to_base64("alice.png")), 
         unsafe_allow_html=True,
     )
 
@@ -166,6 +209,40 @@ def professor_view():
                     cursor: pointer;
                     width: 120px;  /* Added width for consistency */
                 }
+
+                .create-post-button {
+                    background-color:rgb(185, 100, 177);
+                    color: white;
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    text-decoration: none;
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 150px;
+                    text-align: center;
+                }
+
+                .no-professors-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;  /* Full viewport height */
+                    text-align: center;
+                    color: #333;
+                }
+                .no-professors-message {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #4CAF50;  /* Green for emphasis */
+                    padding: 20px;
+                    border: 2px solid #4CAF50;
+                    border-radius: 10px;
+                    background-color: #f4f4f9;  /* Light background for the message */
+                }
                 </style>
                 """,
                 unsafe_allow_html=True,
@@ -186,19 +263,29 @@ def professor_view():
             """, unsafe_allow_html=True)
 
             # Centered Swipe buttons below professor info
-            with st.container():
-                st.markdown('<div class="button-container">', unsafe_allow_html=True)  # Open button container
-                if st.button("❌ Not Interested", key=f"reject_{professor['name']}", help="Reject the professor's opportunity"):
-                    st.session_state.professor_index += 1  # Move to the next professor
-                    st.rerun()  # Refresh UI
+           
+            col1, col2, col3 = st.columns([1,2,1])
+            with col2:
 
-                if st.button("✅ Interested", key=f"accept_{professor['name']}", help="Accept the professor's opportunity"):
-                    st.session_state.professor_index += 1  # Move to the next professor
-                    st.rerun()  # Refresh UI
+
+                col1, col2 = st.columns(2)
+                #st.markdown('<div class="button-container">', unsafe_allow_html=True)  # Open button container
+                with col1:
+                    if st.button("❌ Not Interested", key=f"reject_{professor['name']}", help="Reject the professor's opportunity"):
+                       st.session_state.professor_index += 1  # Move to the next professor
+                       st.rerun()  # Refresh UI
+
+
+                with col2:
+                    if st.button("✅ Interested", key=f"accept_{professor['name']}", help="Accept the professor's opportunity"):
+                       st.session_state.professor_index += 1  # Move to the next professor
+                       st.rerun()  # Refresh UI
                 st.markdown('</div>', unsafe_allow_html=True)  # Close button container
 
     else:
-        st.write("No more professors to show!")
+        st.markdown('<div class="no-professors-container"><div class="no-professors-message">No more postings to show!</div></div>', unsafe_allow_html=True)
+
+
 
 # Main App UI
 def main():
