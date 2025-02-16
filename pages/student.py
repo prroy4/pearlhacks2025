@@ -60,6 +60,7 @@ def display_header():
             object-fit: cover;
             cursor: pointer;
         }
+
         .messages-button {
             background-color: #4CAF50;
             color: white;
@@ -86,7 +87,9 @@ def display_header():
                 <a href="/messages" target="_self">
                     <button class="messages-button">💬 Messages</button>
                 </a>
-                <img src="data:image/png;base64,{photo_base64}" class="profile-photo">
+                <a href="/profile">
+                    <button class="profile-button">My Profile</button>
+                </a>
             </div>
         </div>
         """.format(photo_base64=image_to_base64("alice.png")),  # Replace "alice.png" with Alice's photo
